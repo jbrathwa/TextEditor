@@ -7,13 +7,11 @@ public class TextEditor extends Frame implements ActionListener {
     private File fileObj;
     private MenuBar mbr;
     private Menu file,help;
-    private MenuItem nw,open,saveas,save,close;
-    private Panel p;
+    private MenuItem nw,open,saveas,save,close,about;
     private FileDialog op,sv,newfile;
     private TextArea txt;
-    private String text="";
-    private String dir,fil;
-    public TextEditor()
+
+    private TextEditor()
     {
         setTitle("TextEditor");
         setSize(800,600);
@@ -41,8 +39,8 @@ public class TextEditor extends Frame implements ActionListener {
         mbr.add(file);
 
         help = new Menu("Help");
-        MenuItem about;
         about = new MenuItem("About");
+        about.addActionListener(this);
         help.add(about);
         mbr.add(help);
 
@@ -64,11 +62,11 @@ public class TextEditor extends Frame implements ActionListener {
             op = new FileDialog(this,"Open File",FileDialog.LOAD);
             op.setVisible(true);
             op.setSize(500,500);
-            dir = op.getDirectory();
-            fil = op.getFile();
+            String dir = op.getDirectory();
+            String fil = op.getFile();
             fileObj = new File(dir,fil);
             FileOperations fread = new FileOperations(dir,fil);
-            text = fread.readFile();
+            String text = fread.readFile();
             txt.setText(text);
         }
 
@@ -84,8 +82,8 @@ public class TextEditor extends Frame implements ActionListener {
             sv = new FileDialog(this,"Save File As",FileDialog.SAVE);
             sv.setSize(500,500);
             sv.setVisible(true);
-            dir = sv.getDirectory();
-            fil = sv.getFile();
+            String dir = sv.getDirectory();
+            String fil = sv.getFile();
             String write = txt.getText();
             fileObj = new File(dir,fil);
             FileOperations fwrite = new FileOperations(dir,fil);
@@ -97,14 +95,22 @@ public class TextEditor extends Frame implements ActionListener {
             newfile =new FileDialog(this,"New File",FileDialog.SAVE);
             newfile.setSize(500,500);
             newfile.setVisible(true);
-            dir = newfile.getDirectory();
-            fil = newfile.getFile();
+            String dir = newfile.getDirectory();
+            String fil = newfile.getFile();
             fileObj = new File(dir,fil);
+            txt.setText(" ");
         }
 
         if(ae.getSource() == close)
         {
-            dispose();
+           MyDialog cls = new MyDialog(this,"Close","Are you sure ?",MyDialog.TWOBUTTON);
+           cls.setVisible(true);
+        }
+        
+        if(ae.getSource() == about)
+        {
+            MyDialog abt = new MyDialog(this,"About","A Simple Text Editor like Notepad", MyDialog.ONEBUTTON);
+            abt.setVisible(true);
         }
     }
 
